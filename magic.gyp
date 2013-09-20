@@ -1,6 +1,6 @@
 {
   'variables': {
-    'magic_enabled%': 1,
+    'magic_enabled%': 0,
     'android_app_targets': [
       '<(DEPTH)/magic/targets.gyp:*',
     ],
