@@ -35,6 +35,10 @@ Add the following to the 'solutions' list in your .gclient file (in src/../):
     "managed"     : True,
   },
 
+So that this new directory does not show up as "dirty" in git, add it to the repo's .git/info/exclude:
+
+echo "/magic" >> .git/info/exclude
+
 Enabling:
 
 By default, the magic library is disabled. To enable it, the gyp variable "magic_enabled" must be set to 1. This can be done either by adding it to GYP_DEFINES:
