@@ -162,7 +162,6 @@ static bool IsNotPrintable(unsigned char c) {
 }
 
 static std::string StripNonPrintable(std::string s) {
-  std::cout << s << std::endl;
   std::replace_if(s.begin(), s.end(), IsNotPrintable, '^');
   s.erase(std::unique(s.begin(), s.end()), s.end());
   return s;
