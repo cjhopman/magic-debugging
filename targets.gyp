@@ -1,7 +1,7 @@
 {
   'targets': [
     {
-      'target_name': 'magic_android',
+      'target_name': 'magic_library',
       'type': '<(component)',
       'sources': [
         'magic.cc',
