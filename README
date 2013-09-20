@@ -27,6 +27,18 @@ Iterable classes -- std::vector, std::map, etc.
 
 Installing:
 
+This library should be in your chromium source tree at "src/magic".
+
+So that this new directory does not show up as "dirty" in git, add it to the repo's .git/info/exclude:
+  echo "/magic" >> .git/info/exclude
+
+Option 1:
+
+Clone the git repo into "src/magic".
+  git clone https://github.com/cjhopman/magic-debugging.git src/magic
+
+Option 2:
+
 Add the following to the 'solutions' list in your .gclient file (in src/../):
 
   {
@@ -35,9 +47,6 @@ Add the following to the 'solutions' list in your .gclient file (in src/../):
     "managed"     : True,
   },
 
-So that this new directory does not show up as "dirty" in git, add it to the repo's .git/info/exclude:
-
-echo "/magic" >> .git/info/exclude
 
 Enabling:
 
@@ -60,3 +69,4 @@ Another option is to add the variable to your chrome/supplement.gypi or ~/includ
 Downsides:
 
 Toggling magic_enabled causes a full rebuild.
+In non-Android builds, the indent level is not shared across shared_library targets.
