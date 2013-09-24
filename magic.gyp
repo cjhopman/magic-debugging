@@ -19,9 +19,11 @@
         },
         'target_conditions': [
           ['_toolset=="target" and not _target_name in magic_disabled_targets', {
+            'include_dirs': [
+              '<(ABS_MAGIC)',
+            ],
             'cflags_cc': [
               '-Wno-gnu',
-              '-isystem', '<(ABS_MAGIC)',
               '-include', 'magic.h',
             ],
           }],
