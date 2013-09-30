@@ -33,7 +33,7 @@ namespace {
     std::string name;
     time_point start;
     magic_timer(std::string name = "") : name(name) { reset(); }
-    void print() { TRACE << name << " time: " << value(); }
+    void print() { DUMP() << name << " time: " << value(); }
     void reset() { start = now(); }
     ~magic_timer() { print(); }
   };

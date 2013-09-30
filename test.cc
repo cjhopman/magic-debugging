@@ -91,20 +91,20 @@ int main() {
   DUMP(hsasc);
 
 
-  TRACE_SCOPE();
-  TRACE_SCOPE("hello", "world");
+  DUMP_SCOPE();
+  DUMP_SCOPE("hello", "world");
   int x = 10, y = 20;
   string z = "magic";
   DUMP(x, y, z, "test");
   {
-    TRACE_SCOPE("inner", "scope");
+    DUMP_SCOPE("inner", "scope");
   }
 
-  TRACE_NEXT_SCOPE("for", "loop")
+  DUMP_NEXT_SCOPE("for", "loop")
   for (int i = 0; i < 3; i++) {
-    TRACE_SCOPE();
-    TRACE << i;
-    TRACE << TFORMAT(i);
+    DUMP_SCOPE();
+    DUMP() << i;
+    DUMP() << TFORMAT(i);
   }
 
   HasOutputToStream ots(3);

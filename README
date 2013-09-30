@@ -6,16 +6,16 @@ It introduces several useful functions that are automatically available in every
 
 All messages include a tag with file:line+function_name
 
-TRACE << "this is a message"; // Prints the message.
-TRACE_INDENT; // Indents all magic logging one level until the end of this scope.
+DUMP() << "this is a message"; // Prints the message.
+DUMP_INDENT; // Indents all magic logging one level until the end of this scope.
 
-TRACE_SCOPE(); // Prints a "<<<<<" now, and ">>>>>" when this scope exits. Also indents all logs within this scope.
-TRACE_SCOPE("enter", "exit"); // Same as above, but prints "enter" and "exit" instead of "<<<<<" and ">>>>>".
+DUMP_SCOPE(); // Prints a "<<<<<" now, and ">>>>>" when this scope exits. Also indents all logs within this scope.
+DUMP_SCOPE("enter", "exit"); // Same as above, but prints "enter" and "exit" instead of "<<<<<" and ">>>>>".
 
-DUMP(x, y) << " wow!"; // Same as: TRACE << "x = " << x << " y = " << y << " wow!";
-DUMP(*foo->bar().baz); // Same as: TRACE << "*foo->bar().baz = " << *foo->bar().baz;
+DUMP(x, y) << " wow!"; // Same as: DUMP() << "x = " << x << " y = " << y << " wow!";
+DUMP(*foo->bar().baz); // Same as: DUMP() << "*foo->bar().baz = " << *foo->bar().baz;
 
-TRACE << TFORMAT(x, y, z, w); // Same as: TRACE << "x = " << x << "y = " << y << "z = " << z << "w = " << w;
+DUMP() << TFORMAT(x, y, z, w); // Same as: DUMP() << "x = " << x << "y = " << y << "z = " << z << "w = " << w;
 
 In addition, the magic library automatically knows how to print many things that have a reasonable way of being printed:
 

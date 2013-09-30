@@ -15,32 +15,32 @@
 
 // Usage
 //   Log a message (with file:line+function tag):
-//     TRACE << "this is the value of x:" << x;
+//     DUMP << "this is the value of x:" << x;
 //   Indent traces one level until leaving this scope:
-//     TRACE_INDENT;
+//     DUMP_INDENT;
 //   Log a message when exiting the current scope:
-//     TRACE_EXIT << "exiting scope at time: " << getTime();
+//     DUMP_EXIT << "exiting scope at time: " << getTime();
 //   Print foo=<value of foo>:
-//     TRACE << "these are the function args: " << TFORMAT(arg1) << TFORMAT(arg2);
-//     TRACE << "or something more complicated: " << TFORMAT(this->getFoo().getBar(x, y));
-//     TRACE << "or multiple arguments in one call: " << TFORMAT(arg1, arg2, arg3); <-- support ~10 arguments
+//     DUMP << "these are the function args: " << TFORMAT(arg1) << TFORMAT(arg2);
+//     DUMP << "or something more complicated: " << TFORMAT(this->getFoo().getBar(x, y));
+//     DUMP << "or multiple arguments in one call: " << TFORMAT(arg1, arg2, arg3); <-- support ~10 arguments
 //   Just dump some formatted variables:
 //     DUMP(arg1, arg2, this->getTime());
 //   Print a message now, another when exiting the current scope, and indent all
 //   traces between those two points.
-//     TRACE_SCOPE("entering the scope", "exiting the scope");
-//     TRACE_SCOPE("custom message only when entering"); // prints a default message on exit
-//     TRACE_SCOPE(); // default message on entering/exiting
+//     DUMP_SCOPE("entering the scope", "exiting the scope");
+//     DUMP_SCOPE("custom message only when entering"); // prints a default message on exit
+//     DUMP_SCOPE(); // default message on entering/exiting
 //   Print a message now, and when the scope starting right after the call and
 //   indent traces between (!IMPORTANT no semicolon after)
-//     TRACE_NEXT_SCOPE()
+//     DUMP_NEXT_SCOPE()
 //     for (int i = 0; i < 10; i++) { ... }
-//     TRACE_NEXT_SCOPE("on entering", "on exiting")
+//     DUMP_NEXT_SCOPE("on entering", "on exiting")
 //     if (...) { ... }
 //
-//   @DEPRECATED - use TRACE_SCOPE
+//   @DEPRECATED - use DUMP_SCOPE
 //   Print entering/exiting of a function and indent all traces 1 level while in function (must be placed at start of function):
-//     TRACE_FUNC;
+//     DUMP_FUNC;
 
 namespace magic {
 
@@ -95,28 +95,27 @@ struct MAGIC_EXPORT _magic_indenter {
   }
 };
 
-#define TRACE_TAG magic::_magic_logger::tag(__FILE__, __LINE__, std::string(__func__).substr(0, std::string(__func__).find('('))) << magic::_magic_logger::indent_string()
+#define DUMP_TAG magic::_magic_logger::tag(__FILE__, __LINE__, std::string(__func__).substr(0, std::string(__func__).find('('))) << magic::_magic_logger::indent_string()
 
-#define TRACE_IMPL(name) if (magic::_magic_logger name = magic::_magic_logger()) name << TRACE_TAG
-#define TRACE TRACE_IMPL(UNIQUE_NAME(lg_trace_))
+#define DUMP_IMPL(name) if (magic::_magic_logger name = magic::_magic_logger()) name << DUMP_TAG
 
-#define TRACE_EXIT_IMPL(name) magic::_magic_logger name; name << TRACE_TAG; name
-#define TRACE_EXIT TRACE_EXIT_IMPL(UNIQUE_NAME(lg_exit_))
+#define DUMP_EXIT_IMPL(name) magic::_magic_logger name; name << DUMP_TAG; name
+#define DUMP_EXIT DUMP_EXIT_IMPL(UNIQUE_NAME(lg_exit_))
 
-#define TRACE_INDENT magic::_magic_indenter UNIQUE_NAME(mi_indent_);
+#define DUMP_INDENT magic::_magic_indenter UNIQUE_NAME(mi_indent_);
 
-#define TRACE_SCOPE_IMPL(_, enter, exit, ...) TRACE << ">>>>> " << enter; TRACE_EXIT << "<<<<< " << exit; TRACE_INDENT;
-#define TRACE_SCOPE(...) TRACE_SCOPE_IMPL((), ##__VA_ARGS__, "", "")
-#define TRACE_FUNC TRACE_SCOPE("Entering function", "Exiting function")
+#define DUMP_SCOPE_IMPL(_, enter, exit, ...) DUMP_IMPL << ">>>>> " << enter; DUMP_EXIT << "<<<<< " << exit; DUMP_INDENT;
+#define DUMP_SCOPE(...) DUMP_SCOPE_IMPL((), ##__VA_ARGS__, "", "")
+#define DUMP_FUNC DUMP_SCOPE("Entering function", "Exiting function")
 
-#define TRACE_NEXT_SCOPE_IMPL(name, enter, exit, ...) TRACE << ">>>>> " << enter; if (magic::_magic_logger name = magic::_magic_logger()) if (name.add_scope_indent(1) << TRACE_TAG << "<<<<< " << exit)
-#define TRACE_NEXT_SCOPE(...) TRACE_NEXT_SCOPE_IMPL(UNIQUE_NAME(lg_next_scope_), ##__VA_ARGS__, "", "")
+#define DUMP_NEXT_SCOPE_IMPL(name, enter, exit, ...) DUMP_IMPL << ">>>>> " << enter; if (magic::_magic_logger name = magic::_magic_logger()) if (name.add_scope_indent(1) << DUMP_TAG << "<<<<< " << exit)
+#define DUMP_NEXT_SCOPE(...) DUMP_NEXT_SCOPE_IMPL(UNIQUE_NAME(lg_next_scope_), ##__VA_ARGS__, "", "")
 
 #define TFORMAT1(X) STRINGIFY(X) << "=" << X << " "
 #define TFORMATR(X) TFORMAT1(X),
 #define TFORMAT(...) CALL(JOIN, <<, FOREACH(TFORMATR, __VA_ARGS__) "")
 
-#define DUMP(...) TRACE << TFORMAT(__VA_ARGS__)
+#define DUMP(...) DUMP_IMPL << TFORMAT(__VA_ARGS__)
 
 }  // namespace
 
