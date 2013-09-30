@@ -25,8 +25,11 @@ std::string _magic_logger::tag(std::string filename, int line, std::string funcn
 }
 
 _magic_logger& StreamTo(_magic_logger& log, std::string msg) {
-  if (log.at_new_line)
+  if (log.at_new_line) {
+    _magic_indent_level -= log.scope_indent;
     log.buf << std::string(_magic_logger::tag("", 0, "").size(), ' ') << _magic_logger::indent_string();
+    _magic_indent_level += log.scope_indent;
+  }
   log.at_new_line = false;
 
   size_t end = msg.find('\n');

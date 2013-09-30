@@ -73,6 +73,8 @@ template <>
 struct IsInt<int> { typedef bool_<true> type; };
 
 int main() {
+  DUMP_START << TFORMAT();
+  DUMP_START << TFORMAT(1);
   cout << all_c<bool_<true>, bool_<true> >::type::value << endl;
   cout << all_c<bool_<false>, bool_<true> >::type::value << endl;
   cout << all_c<bool_<true>, bool_<false> >::type::value << endl;

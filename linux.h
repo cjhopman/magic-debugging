@@ -98,24 +98,32 @@ struct MAGIC_EXPORT _magic_indenter {
 #define DUMP_TAG magic::_magic_logger::tag(__FILE__, __LINE__, std::string(__func__).substr(0, std::string(__func__).find('('))) << magic::_magic_logger::indent_string()
 
 #define DUMP_IMPL(name) if (magic::_magic_logger name = magic::_magic_logger()) name << DUMP_TAG
+#define DUMP_START DUMP_IMPL(UNIQUE_NAME(_lg_trace_))
 
 #define DUMP_EXIT_IMPL(name) magic::_magic_logger name; name << DUMP_TAG; name
 #define DUMP_EXIT DUMP_EXIT_IMPL(UNIQUE_NAME(lg_exit_))
 
 #define DUMP_INDENT magic::_magic_indenter UNIQUE_NAME(mi_indent_);
 
-#define DUMP_SCOPE_IMPL(_, enter, exit, ...) DUMP_IMPL << ">>>>> " << enter; DUMP_EXIT << "<<<<< " << exit; DUMP_INDENT;
+#define DUMP_SCOPE_IMPL(_, enter, exit, ...) DUMP_START << ">>>>> " << enter; DUMP_EXIT << "<<<<< " << exit; DUMP_INDENT;
 #define DUMP_SCOPE(...) DUMP_SCOPE_IMPL((), ##__VA_ARGS__, "", "")
 #define DUMP_FUNC DUMP_SCOPE("Entering function", "Exiting function")
 
-#define DUMP_NEXT_SCOPE_IMPL(name, enter, exit, ...) DUMP_IMPL << ">>>>> " << enter; if (magic::_magic_logger name = magic::_magic_logger()) if (name.add_scope_indent(1) << DUMP_TAG << "<<<<< " << exit)
+#define DUMP_NEXT_SCOPE_IMPL(name, enter, exit, ...) \
+  DUMP_START << ">>>>> " << enter; \
+  if (magic::_magic_logger name = magic::_magic_logger()) \
+    if (name << DUMP_TAG << "<<<<< " << exit) \
+      if (name.add_scope_indent(1))
+
 #define DUMP_NEXT_SCOPE(...) DUMP_NEXT_SCOPE_IMPL(UNIQUE_NAME(lg_next_scope_), ##__VA_ARGS__, "", "")
 
 #define TFORMAT1(X) STRINGIFY(X) << "=" << X << " "
 #define TFORMATR(X) TFORMAT1(X),
-#define TFORMAT(...) CALL(JOIN, <<, FOREACH(TFORMATR, __VA_ARGS__) "")
+#define TFORMAT_IMPL(...) CALL(JOIN, <<, FOREACH(TFORMATR, __VA_ARGS__) "")
+#define TFORMAT_NOOP(...) ""
+#define TFORMAT(...) IF_HAS_ARGS(TFORMAT_IMPL, TFORMAT_NOOP, __VA_ARGS__)(__VA_ARGS__)
 
-#define DUMP(...) DUMP_IMPL << TFORMAT(__VA_ARGS__)
+#define DUMP(...) DUMP_START << TFORMAT(__VA_ARGS__)
 
 }  // namespace
 
