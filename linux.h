@@ -121,7 +121,7 @@ struct MAGIC_EXPORT _magic_indenter {
 #define TFORMATR(X) TFORMAT1(X),
 #define TFORMAT_IMPL(...) CALL(JOIN, <<, FOREACH(TFORMATR, __VA_ARGS__) "")
 #define TFORMAT_NOOP(...) ""
-#define TFORMAT(...) IF_HAS_ARGS(TFORMAT_IMPL, TFORMAT_NOOP, __VA_ARGS__)(__VA_ARGS__)
+#define TFORMAT(...) IF_HAS_ARGS(TFORMAT_IMPL, TFORMAT_NOOP, ##__VA_ARGS__)(__VA_ARGS__)
 
 #define DUMP(...) DUMP_START << TFORMAT(__VA_ARGS__)
 

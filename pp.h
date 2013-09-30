@@ -48,4 +48,4 @@
 
 #define CALL(func, ...) func(__VA_ARGS__)
 
-#define IF_HAS_ARGS(IF, ELSE, ...) GET_16TH((), ##__VA_ARGS__, IF, IF, IF, IF, IF, IF, IF, IF, IF, IF, IF, IF, IF, ELSE)
+#define IF_HAS_ARGS(IF, ELSE, ...) GET_16TH((), ##__VA_ARGS__, IF, IF, IF, IF, IF, IF, IF, IF, IF, IF, IF, IF, IF, IF, ELSE)
