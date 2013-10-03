@@ -23,7 +23,6 @@
               '<(ABS_MAGIC)',
             ],
             'cflags_cc': [
-              '-Wno-gnu',
               '-include', 'magic.h',
             ],
           }],
