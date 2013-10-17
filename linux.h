@@ -2,13 +2,7 @@
 #define MAGIC_LINUX_H
 
 #include <sstream>
-#include <iostream>
-#include <cstdio>
 #include <string>
-
-#if defined(OS_ANDROID) || defined(ANDROID)
-#include <android/log.h>
-#endif
 
 #include "pp.h"
 #include "export.h"
@@ -95,7 +89,7 @@ struct MAGIC_EXPORT _magic_indenter {
   }
 };
 
-#define DUMP_TAG magic::_magic_logger::tag(__FILE__, __LINE__, std::string(__func__).substr(0, std::string(__func__).find('('))) << magic::_magic_logger::indent_string()
+#define DUMP_TAG magic::_magic_logger::tag(__FILE__, __LINE__, __func__) << magic::_magic_logger::indent_string()
 
 #define DUMP_IMPL(name) if (magic::_magic_logger name = magic::_magic_logger()) name << DUMP_TAG
 #define DUMP_START DUMP_IMPL(UNIQUE_NAME(_lg_trace_))

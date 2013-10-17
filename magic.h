@@ -4,6 +4,8 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wgnu"
 
+#include <math.h>
+
 #include "stream.h"
 #include "timer.h"
 #include "linux.h"

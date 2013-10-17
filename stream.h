@@ -1,8 +1,6 @@
 #ifndef MAGIC_STREAM_H
 #define MAGIC_STREAM_H
 
-#include <iostream>
-#include <algorithm>
 #include "enable_if.h"
 #include "type_list.h"
 #include "linux.h"
@@ -157,15 +155,7 @@ DEFINE_STREAM_TO_FOR(magic::not_c<magic::IsClass<T> >, const T& t) {
   StreamTo(os, ss.str());
 }
 
-static bool IsNotPrintable(unsigned char c) {
-  return !(c > 0x20 && c < 0x97);
-}
-
-static std::string StripNonPrintable(std::string s) {
-  std::replace_if(s.begin(), s.end(), IsNotPrintable, '^');
-  s.erase(std::unique(s.begin(), s.end()), s.end());
-  return s;
-}
+MAGIC_EXPORT std::string StripNonPrintable(std::string s);
 
 DEFINE_STREAM_TO_FOR(magic::HasSerializeAsString<T>, const T& t) {
   os << StripNonPrintable(t.SerializeAsString());

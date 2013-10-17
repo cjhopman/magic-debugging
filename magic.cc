@@ -1,5 +1,13 @@
 #include "linux.h"
 
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+
+#if defined(OS_ANDROID) || defined(ANDROID)
+#include <android/log.h>
+#endif
+
 namespace magic {
 
 int _magic_indent_level = 0;
@@ -17,6 +25,7 @@ std::string _magic_logger::indent_string() {
 }
 
 std::string _magic_logger::tag(std::string filename, int line, std::string funcname) {
+  std::string func = funcname.substr(0, funcname.find('('));
   filename = force_length(filename, 30);
   funcname = force_length(funcname, 40);
   char buf[350];
@@ -68,6 +77,16 @@ _magic_logger::~_magic_logger() {
 #else
   std::cerr << buf.str() << std::endl;
 #endif
+}
+
+static bool IsNotPrintable(unsigned char c) {
+  return !(c > 0x20 && c < 0x97);
+}
+
+std::string StripNonPrintable(std::string s) {
+  std::replace_if(s.begin(), s.end(), IsNotPrintable, '^');
+  s.erase(std::unique(s.begin(), s.end()), s.end());
+  return s;
 }
 
 }  // namespace magic

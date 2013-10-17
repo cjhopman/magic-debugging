@@ -1,14 +1,15 @@
+#include "magic.h"
+
 #include <iostream>
 #include <typeinfo>
 #include <vector>
-#include "magic.h"
-#include "stream.h"
-using namespace std;
+
+#include "math.h"
 
 struct HasOutputToStream {
   int i;
   HasOutputToStream(int j) : i(j) { }
-  void OutputToStream(ostream* os) const {
+  void OutputToStream(std::ostream* os) const {
     *os << i;
   }
 };
@@ -16,7 +17,7 @@ struct HasOutputToStream {
 struct HasToString {
   int i;
   HasToString(int j) : i(j) { }
-  string ToString() const {
+  std::string ToString() const {
     std::stringstream buf;
     buf << i;
     return buf.str();
@@ -26,7 +27,7 @@ struct HasToString {
 struct HasSerializeAsString {
   int i;
   HasSerializeAsString(int j) : i(j) { }
-  string SerializeAsString() const {
+  std::string SerializeAsString() const {
     std::stringstream buf;
     buf << i;
     return buf.str();
@@ -40,10 +41,10 @@ struct HasSerializeAsStringChild : public HasSerializeAsString {
 struct HasToStringAndOutputToStream {
   int i;
   HasToStringAndOutputToStream(int j) : i(j) { }
-  void OutputToStream(ostream* os) const {
+  void OutputToStream(std::ostream* os) const {
     *os << i;
   }
-  string ToString() const {
+  std::string ToString() const {
     std::stringstream buf;
     buf << i;
     return buf.str();
@@ -73,8 +74,11 @@ template <>
 struct IsInt<int> { typedef bool_<true> type; };
 
 int main() {
+  isfinite(0);
   DUMP_START << TFORMAT();
   DUMP_START << TFORMAT(1);
+  using std::cout;
+  using std::endl;
   cout << all_c<bool_<true>, bool_<true> >::type::value << endl;
   cout << all_c<bool_<false>, bool_<true> >::type::value << endl;
   cout << all_c<bool_<true>, bool_<false> >::type::value << endl;
@@ -96,7 +100,7 @@ int main() {
   DUMP_SCOPE();
   DUMP_SCOPE("hello", "world");
   int x = 10, y = 20;
-  string z = "magic";
+  std::string z = "magic";
   DUMP(x, y, z, "test");
   {
     DUMP_SCOPE("inner", "scope");
@@ -115,7 +119,7 @@ int main() {
   HasToStringAndOutputToStream tsaots(5);
   DUMP(tsaots);
 
-  vector<int> vi;
+  std::vector<int> vi;
   vi.push_back(1);
   vi.push_back(2);
   vi.push_back(3);

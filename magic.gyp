@@ -14,7 +14,6 @@
             'magic_library',
             'protobuf_lite',
             'libyuv',
-            'skia',
           ],
         },
         'target_conditions': [
