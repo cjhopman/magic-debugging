@@ -125,4 +125,15 @@ int main() {
   vi.push_back(3);
   DUMP(vi);
 
+  std::string cppstring("this is a c++ string");
+  const char* cstring = "this is a c string";
+  int i = 2;
+  int* j = &i;
+
+  DUMP(cppstring);
+  DUMP(cppstring.c_str());
+  DUMP(cstring);
+  DUMP(i);
+  DUMP(j);
+
 }

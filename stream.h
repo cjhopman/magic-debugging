@@ -106,7 +106,7 @@ static void StreamTo(_magic_logger& os, const char*const t) {
 
 template <typename T>
 void StreamTo(_magic_logger& os, T*const t) {
-  StreamTo(os, *t);
+  StreamTo(os, (void*)t);
 }
 
 template <typename L, typename R>
