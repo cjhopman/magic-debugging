@@ -91,15 +91,29 @@ struct MAGIC_EXPORT _magic_indenter {
 
 #define DUMP_TAG magic::_magic_logger::tag(__FILE__, __LINE__, __func__) << magic::_magic_logger::indent_string()
 
-#define DUMP_IMPL(name) if (magic::_magic_logger name = magic::_magic_logger()) name << DUMP_TAG
-#define DUMP_START DUMP_IMPL(UNIQUE_NAME(_lg_trace_))
+#define DUMP_IMPL(name, indent)                           \
+  if (magic::_magic_logger name = magic::_magic_logger()) \
+    if (name << DUMP_TAG)                                 \
+      if (name.add_scope_indent(indent))                  \
+        name
 
-#define DUMP_EXIT_IMPL(name) magic::_magic_logger name; name << DUMP_TAG; name
+#define DUMP_START_INDENT(indent) DUMP_IMPL(UNIQUE_NAME(_lg_trace_), indent)
+#define DUMP_START DUMP_IMPL(UNIQUE_NAME(_lg_trace_), 0)
+
+#define DUMP_EXIT_IMPL(name) \
+  magic::_magic_logger name; \
+  name << DUMP_TAG;          \
+  name
+
 #define DUMP_EXIT DUMP_EXIT_IMPL(UNIQUE_NAME(lg_exit_))
 
 #define DUMP_INDENT magic::_magic_indenter UNIQUE_NAME(mi_indent_);
 
-#define DUMP_SCOPE_IMPL(_, enter, exit, ...) DUMP_START << ">>>>> " << enter; DUMP_EXIT << "<<<<< " << exit; DUMP_INDENT;
+#define DUMP_SCOPE_START(enter) DUMP_START_INDENT(1)
+#define DUMP_SCOPE_IMPL(_, enter, exit, ...) \
+  DUMP_EXIT << "<<<<< " << exit;             \
+  DUMP_START_INDENT(1) << ">>>>> " << enter
+
 #define DUMP_SCOPE(...) DUMP_SCOPE_IMPL((), ##__VA_ARGS__, "", "")
 #define DUMP_FUNC DUMP_SCOPE("Entering function", "Exiting function")
 

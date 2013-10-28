@@ -10,6 +10,8 @@
 #include "timer.h"
 #include "linux.h"
 
+#define _MAGIC_
+
 #pragma clang diagnostic pop
 
 #endif

@@ -96,6 +96,9 @@ int main() {
   HasSerializeAsStringChild hsasc(8);
   DUMP(hsasc);
 
+  {
+    DUMP_SCOPE() << "with message";
+  }
 
   DUMP_SCOPE();
   DUMP_SCOPE("hello", "world");
