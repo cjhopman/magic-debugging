@@ -21,8 +21,18 @@
             'include_dirs': [
               '<(ABS_MAGIC)',
             ],
-            'cflags_cc': [
-              '-include', 'magic.h',
+            'conditions': [
+              ['OS=="mac"', {
+                'xcode_settings': {
+                  'OTHER_CFLAGS': [
+                    '-include', 'magic.h',
+                  ],
+                },
+              }, {
+                'cflags_cc': [
+                  '-include', 'magic.h',
+                ],
+              }],
             ],
           }],
           ['_toolset=="target" and (_type=="shared_library" or _type=="executable") and not _target_name in magic_disabled_targets', {
