@@ -5,6 +5,10 @@
       '<(DEPTH)/magic/targets.gyp:*',
     ],
     'ABS_MAGIC': '<!(cd <(DEPTH)/magic && pwd)',
+
+    # TODO(cjhopman): mac_pch fails because the magic.h -include appears in the
+    # command before precompiled headers. Fix that instead of disabling pch.
+    'chromium_mac_pch': 0,
   },
   'conditions': [
     ['magic_enabled == 1', {
