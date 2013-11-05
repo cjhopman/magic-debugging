@@ -24,7 +24,7 @@
             'conditions': [
               ['OS=="mac"', {
                 'xcode_settings': {
-                  'OTHER_CFLAGS': [
+                  'OTHER_CPLUSPLUSFLAGS': [
                     '-include', 'magic.h',
                   ],
                 },
