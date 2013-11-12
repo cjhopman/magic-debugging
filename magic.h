@@ -1,8 +1,11 @@
 #ifndef MAGIC_MAGIC_H
 #define MAGIC_MAGIC_H
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wgnu"
+#if __clang__
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wgnu"
+#endif
+
 
 #include <math.h>
 
@@ -12,6 +15,8 @@
 
 #define _MAGIC_
 
-#pragma clang diagnostic pop
+#if __clang__
+#  pragma clang diagnostic pop
+#endif
 
 #endif

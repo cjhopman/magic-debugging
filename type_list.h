@@ -124,7 +124,7 @@ namespace magic {
 }
 #include <cxxabi.h>
 namespace magic {
-  static const std::string demangle(const char* name) {
+  static inline const std::string demangle(const char* name) {
     int status = -4;
     char* res = abi::__cxa_demangle(name, NULL, NULL, &status);
     const char* const demangled_name = (status==0)?res:name;
@@ -133,7 +133,7 @@ namespace magic {
     return ret_val;
   }
 #else
-  static const char* demangle(const char* name)
+  static inline const char* demangle(const char* name)
   {
     return name;
   }

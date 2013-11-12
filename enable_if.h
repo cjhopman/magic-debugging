@@ -132,27 +132,31 @@ struct any_conversion {
     template <typename U, U>                                         \
     struct type_check;                                               \
     template <typename _1>                                           \
-    static yes& chk(                                                 \
+    static yes& chk(                                          \
         type_check<typename func_sig<typename MemberFunctionType<    \
                        __typeof__(&_1::funcname)>::ClassType>::type, \
                    &_1::funcname>*);                                 \
     template <typename>                                              \
-    static no& chk(...);                                             \
+    static no& chk(...);                                      \
     typedef bool_<sizeof(chk<T>(0)) == sizeof(yes)> type;            \
   };
 
+namespace has_func_internal {
+namespace adl_barrier {
+typedef char no;
+struct yes {
+  no dummy[2];
+};
+struct no_overload {};
+yes is_overloaded_impl(...);
+no is_overloaded_impl(const no_overload&);
+no_overload funcname(any_conversion, any_conversion);
+}
+}
+
 #define DEFINE_HAS_FUNC(funcname, sig, name)                                  \
+  namespace has_func_internal {                                               \
   namespace adl_barrier {                                                     \
-  typedef char no;                                                            \
-  struct yes {                                                                \
-    no dummy[2];                                                              \
-  };                                                                          \
-  struct no_overload {};                                                      \
-  static yes is_overloaded_impl(...) { return *(yes*)1; }                     \
-  static no is_overloaded_impl(const no_overload&) { return *(no*)1; }        \
-  static no_overload funcname(any_conversion, any_conversion) {               \
-    return no_overload();                                                     \
-  }                                                                           \
   template <class T>                                                          \
   struct name {                                                               \
     typedef typename extract_argument<0, void(sig)>::type arg0_t;             \
@@ -165,7 +169,8 @@ struct any_conversion {
     typedef name type;                                                        \
   };                                                                          \
   }                                                                           \
-  using adl_barrier::name;
+  }                                                                           \
+  using has_func_internal::adl_barrier::name;
 
 #define DEFINE_HAS_TYPEDEF(typedef_, name)               \
   template <typename T>                                  \

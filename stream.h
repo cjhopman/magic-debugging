@@ -37,17 +37,9 @@ namespace internal {
       any_conversion(const T&);
     };
 
-    static yes is_overloaded_impl(...) { return *(yes*)1; }
-    static no is_overloaded_impl(const no_overload&) { return *(no*)1; }
-
-    static no_overload operator<<(any_conversion, const any_conversion&) { return *(no_overload*)1; }
-
-    template <typename T>
-    struct maker { static const T& make(); };
-    template <typename T>
-    struct maker<T[]> { static T* make(); };
-    template <typename T, size_t n>
-    struct maker<T[n]> { static T* make(); };
+    yes is_overloaded_impl(...);
+    no is_overloaded_impl(const no_overload&);
+    no_overload operator<<(any_conversion, const any_conversion&);
 
     using namespace std;
 
@@ -90,17 +82,17 @@ typename magic::enable_if< \
   void>::type \
 StreamTo(_magic_logger& os, arg)
 
-static void StreamTo(_magic_logger& os, void*const t) {
+static inline void StreamTo(_magic_logger& os, void*const t) {
   std::stringstream ss;
   ss << t;
   StreamTo(os, ss.str());
 }
 
-static void StreamTo(_magic_logger& os, char*const t) {
+static inline void StreamTo(_magic_logger& os, char*const t) {
   StreamTo(os, std::string(t));
 }
 
-static void StreamTo(_magic_logger& os, const char*const t) {
+static inline void StreamTo(_magic_logger& os, const char*const t) {
   StreamTo(os, std::string(t));
 }
 
