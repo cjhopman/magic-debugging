@@ -1,6 +1,6 @@
 #include "pp.h"
 
-#define TFORMAT1(X) STRINGIFY(X) << "=" << X << " "
+#define TFORMAT1(X) M_STRINGIFY(X) << "=" << X << " "
 #define TFORMATR(X) TFORMAT1(X),
 #define TFORMAT(...) CALL(JOIN, <<, FOREACH(TFORMATR, __VA_ARGS__) "")
 

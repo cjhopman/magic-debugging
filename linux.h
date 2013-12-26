@@ -125,7 +125,7 @@ struct MAGIC_EXPORT _magic_indenter {
 
 #define DUMP_NEXT_SCOPE(...) DUMP_NEXT_SCOPE_IMPL(UNIQUE_NAME(lg_next_scope_), ##__VA_ARGS__, "", "")
 
-#define TFORMAT1(X) STRINGIFY(X) << "=" << X << " "
+#define TFORMAT1(X) M_STRINGIFY(X) << "=" << X << " "
 #define TFORMATR(X) TFORMAT1(X),
 #define TFORMAT_IMPL(...) CALL(JOIN, <<, FOREACH(TFORMATR, __VA_ARGS__) "")
 #define TFORMAT_NOOP(...) ""

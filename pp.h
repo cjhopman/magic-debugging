@@ -1,4 +1,4 @@
-#define STRINGIFY(x) #x
+#define M_STRINGIFY(x) #x
 #define EXPAND(x) x
 
 #define CONCAT(x, y) CONCAT1(EXPAND(x), EXPAND(y))
