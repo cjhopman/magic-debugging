@@ -21,7 +21,7 @@ namespace {
 }
 
 std::string _magic_logger::indent_string() {
-  return std::string(_magic_indent_level, ' ');
+  return std::string(_magic_indent_level + self_indent, ' ');
 }
 
 std::string _magic_logger::tag(std::string filename, int line, std::string funcname) {
@@ -35,9 +35,7 @@ std::string _magic_logger::tag(std::string filename, int line, std::string funcn
 
 _magic_logger& StreamTo(_magic_logger& log, std::string msg) {
   if (log.at_new_line) {
-    _magic_indent_level -= log.scope_indent;
-    log.buf << std::string(_magic_logger::tag("", 0, "").size(), ' ') << _magic_logger::indent_string();
-    _magic_indent_level += log.scope_indent;
+    log.buf << std::string(_magic_logger::tag("", 0, "").size(), ' ') << log.indent_string();
   }
   log.at_new_line = false;
 
@@ -62,11 +60,21 @@ _magic_logger& _magic_logger::add_message(std::string msg) {
 
 _magic_logger::_magic_logger() :
   scope_indent(0),
+  self_indent(0),
   at_new_line(false)
 {
 }
+
+_magic_logger::_magic_logger(int indent) :
+  scope_indent(0),
+  self_indent(indent),
+  at_new_line(false)
+{
+}
+
 _magic_logger::_magic_logger(const _magic_logger& o) :
   scope_indent(0),
+  self_indent(o.self_indent),
   at_new_line(false)
 {
 }

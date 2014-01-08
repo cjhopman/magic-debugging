@@ -23,11 +23,11 @@ namespace {
 #ifdef MAGIC_HAS_CHRONO
     typedef std::chrono::high_resolution_clock hrclock;
     typedef hrclock::time_point time_point;
-    time_point now() { return hrclock::now(); }
+    static time_point now() { return hrclock::now(); }
     double value() { return std::duration_cast<std::duration<double>>(now() - start).count(); }
 #else
     typedef time_t time_point;
-    time_point now() { return clock(); }
+    static time_point now() { return clock(); }
     double value() { return now() - start; }
 #endif
     std::string name;
@@ -42,5 +42,6 @@ namespace {
 #define NAMED_TIMER(name) magic_timer timer_ ## __LINE__ = magic_timer(name);
 #define ANON_TIMER() NAMED_TIMER("");
 #define TIMER(...) GET_2ND(__VA_ARGS__, NAMED_TIMER, ANON_TIMER)(__VA_ARGS__)
+#define DUMP_TIME(...) DUMP(__VA_ARGS__) << magic_timer::now()
 
 #endif

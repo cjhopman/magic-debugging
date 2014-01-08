@@ -109,6 +109,20 @@ int main() {
     DUMP_SCOPE("inner", "scope");
   }
 
+  DUMP() << "indent 0";
+  {
+    DUMP_SCOPE();
+    DUMP() << "indent 1";
+    {
+      DUMP_SCOPE();
+      DUMP() << "indent 2";
+      {
+        DUMP_SCOPE();
+        DUMP() << "indent 3";
+      }
+    }
+  }
+
   DUMP_NEXT_SCOPE("for", "loop")
   for (int i = 0; i < 3; i++) {
     DUMP_SCOPE();
