@@ -78,6 +78,7 @@ _magic_logger::_magic_logger(const _magic_logger& o) :
   at_new_line(false)
 {
 }
+
 _magic_logger::~_magic_logger() {
   _magic_indent_level -= scope_indent;
 #if defined(OS_ANDROID) || defined(ANDROID)

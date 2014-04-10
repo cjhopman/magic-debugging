@@ -15,13 +15,19 @@
       'target_defaults': {
         'variables': {
           'magic_disabled_targets': [
+            'harfbuzz-ng',
             'magic_library',
+            'magic_java',
             'protobuf_lite',
             'libyuv',
           ],
         },
         'target_conditions': [
           ['_toolset=="target" and not _target_name in magic_disabled_targets', {
+            'variables': {
+              'input_jars_paths': ['<(PRODUCT_DIR)/lib.java/magic_java.jar'],
+              'library_dexed_jars_paths': ['<(PRODUCT_DIR)/lib.java/magic_java.dex.jar'],
+            },
             'include_dirs': [
               '<(ABS_MAGIC)',
             ],
