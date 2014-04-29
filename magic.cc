@@ -26,6 +26,14 @@ void magic_timer::print() {
   DUMP() << name << " time: " << value();
 }
 
+magic_timer& magic_timer::LookupGlobal(std::string name) {
+  return global_timers()[name];
+}
+
+double GlobalTimerDelta(std::string name) {
+  return magic_timer::LookupGlobal(name).value();
+}
+
 std::string _magic_logger::indent_string() {
   return std::string(_magic_indent_level + self_indent, ' ');
 }

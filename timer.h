@@ -57,14 +57,10 @@ namespace magic {
       return timers;
     }
 
-    static magic_timer& LookupGlobal(std::string name) {
-      return global_timers()[name];
-    }
+    static magic_timer& LookupGlobal(std::string name);
   };
 
-  namespace {
-    double GlobalTimerDelta(std::string name) { return magic_timer::LookupGlobal(name).value(); }
-  }
+  double GlobalTimerDelta(std::string name);
 }
 
 #define GLOBAL_TIMER_RESET(name) magic::magic_timer::LookupGlobal(name).reset()
