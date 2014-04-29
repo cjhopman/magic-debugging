@@ -30,6 +30,11 @@ magic_timer& magic_timer::LookupGlobal(std::string name) {
   return global_timers()[name];
 }
 
+std::map<std::string, magic_timer>& magic_timer::global_timers() {
+  static std::map<std::string, magic_timer> timers;
+  return timers;
+}
+
 double GlobalTimerDelta(std::string name) {
   return magic_timer::LookupGlobal(name).value();
 }

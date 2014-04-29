@@ -52,10 +52,7 @@ namespace magic {
     void reset() { start = now(); }
     ~magic_timer() { if (!suppress_destructor) print(); }
 
-    static std::map<std::string, magic_timer>& global_timers() {
-      static std::map<std::string, magic_timer> timers;
-      return timers;
-    }
+    static std::map<std::string, magic_timer>& global_timers();
 
     static magic_timer& LookupGlobal(std::string name);
   };
