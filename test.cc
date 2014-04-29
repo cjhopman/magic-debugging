@@ -74,6 +74,8 @@ template <>
 struct IsInt<int> { typedef bool_<true> type; };
 
 int main() {
+  GLOBAL_TIMER_RESET("test");
+
   isfinite(0);
   DUMP_START << TFORMAT();
   DUMP_START << TFORMAT(1);
@@ -147,10 +149,17 @@ int main() {
   int i = 2;
   int* j = &i;
 
+  int loops = 0;
+  while (GLOBAL_TIMER_DELTA("test") < 100) {
+    ++loops;
+  }
+  DUMP(loops);
+
   DUMP(cppstring);
   DUMP(cppstring.c_str());
   DUMP(cstring);
   DUMP(i);
   DUMP(j);
 
+  DUMP(GLOBAL_TIMER_DELTA("test"));
 }

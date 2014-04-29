@@ -1,4 +1,6 @@
 #include "linux.h"
+#include "stream.h"
+#include "timer.h"
 
 #include <algorithm>
 #include <iostream>
@@ -20,6 +22,10 @@ namespace {
   }
 }
 
+void magic_timer::print() {
+  DUMP() << name << " time: " << value();
+}
+
 std::string _magic_logger::indent_string() {
   return std::string(_magic_indent_level + self_indent, ' ');
 }
@@ -35,7 +41,8 @@ std::string _magic_logger::tag(std::string filename, int line, std::string funcn
 
 _magic_logger& StreamTo(_magic_logger& log, std::string msg) {
   if (log.at_new_line) {
-    log.buf << std::string(_magic_logger::tag("", 0, "").size(), ' ') << log.indent_string();
+    // 8 == length of time prefix (see ~_magic_logger)
+    log.buf << std::string(8 + _magic_logger::tag("", 0, "").size(), ' ') << log.indent_string();
   }
   log.at_new_line = false;
 
@@ -81,10 +88,14 @@ _magic_logger::_magic_logger(const _magic_logger& o) :
 
 _magic_logger::~_magic_logger() {
   _magic_indent_level -= scope_indent;
+  char tbuf[9];
+  snprintf(
+      tbuf, 9, "[% 5d] ", static_cast<int>(GLOBAL_TIMER_DELTA("_magic_logger")));
+
 #if defined(OS_ANDROID) || defined(ANDROID)
-  __android_log_print(ANDROID_LOG_ERROR, "MAGIC-CPP", "%s", buf.str().c_str());
+  __android_log_print(ANDROID_LOG_ERROR, "MAGIC-CPP", "%s%s", tbuf, buf.str().c_str());
 #else
-  std::cerr << buf.str() << std::endl;
+  std::cerr << tbuf << buf.str() << std::endl;
 #endif
 }
 

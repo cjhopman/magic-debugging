@@ -138,6 +138,7 @@ struct MAGIC_EXPORT _magic_indenter {
 #define TFORMAT(...) IF_HAS_ARGS(TFORMAT_IMPL, TFORMAT_NOOP, ##__VA_ARGS__)(__VA_ARGS__)
 
 #define DUMP(...) DUMP_START << TFORMAT(__VA_ARGS__)
+#define DUMP_RESET_TIMER() GLOBAL_TIMER_RESET("_magic_logger")
 
 }  // namespace
 
