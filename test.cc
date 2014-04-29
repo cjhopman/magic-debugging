@@ -75,6 +75,7 @@ struct IsInt<int> { typedef bool_<true> type; };
 
 int main() {
   GLOBAL_TIMER_RESET("test");
+  DUMP();
 
   isfinite(0);
   DUMP_START << TFORMAT();

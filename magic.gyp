@@ -20,6 +20,8 @@
             'magic_java',
             'protobuf_lite',
             'libyuv',
+
+            'yasm', # yasm uses cflags that cause compilation to fail
           ],
         },
         'target_conditions': [
