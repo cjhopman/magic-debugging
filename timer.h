@@ -12,6 +12,7 @@
 
 #include "pp.h"
 #include "linux.h"
+#include "export.h"
 
 // Usage
 //  Print time from now 'til exiting current scope:
@@ -20,7 +21,7 @@
 //    TIMER("tag");
 
 namespace magic {
-  struct magic_timer {
+  struct MAGIC_EXPORT magic_timer {
 #ifdef MAGIC_HAS_CHRONO
     typedef std::chrono::high_resolution_clock hrclock;
     typedef hrclock::time_point time_point;
@@ -57,7 +58,7 @@ namespace magic {
     static magic_timer& LookupGlobal(std::string name);
   };
 
-  double GlobalTimerDelta(std::string name);
+  MAGIC_EXPORT double GlobalTimerDelta(std::string name);
 }
 
 #define GLOBAL_TIMER_RESET(name) magic::magic_timer::LookupGlobal(name).reset()
