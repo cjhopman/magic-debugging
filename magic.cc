@@ -101,14 +101,13 @@ _magic_logger::_magic_logger(const _magic_logger& o) :
 
 _magic_logger::~_magic_logger() {
   _magic_indent_level -= scope_indent;
-  char tbuf[1024];
-  snprintf(
-      tbuf, 1024, "[% 5d] %s", static_cast<int>(GLOBAL_TIMER_DELTA("_magic_logger")), buf.str().c_str());
-
+  char tbuf[8];
+  snprintf(tbuf, 8, "[% 5d]", static_cast<int>(GLOBAL_TIMER_DELTA("_magic_logger")));
+  std::string msg = std::string(tbuf) + " " + buf.str();
 #if defined(OS_ANDROID) || defined(ANDROID)
-  __android_log_print(ANDROID_LOG_ERROR, "MAGIC-CPP", "%s", tbuf);
+  __android_log_print(ANDROID_LOG_ERROR, "MAGIC-CPP", "%s", msg.c_str());
 #else
-  std::cerr << tbuf << std::endl;
+  std::cerr << msg << std::endl;
 #endif
 }
 
