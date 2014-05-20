@@ -163,26 +163,27 @@ no_overload funcname(any_conversion, any_conversion);
 }
 }
 
-#define DEFINE_HAS_FUNC_2(funcname, sig, name)                    \
-  namespace has_func_internal {                                   \
-  namespace adl_barrier {                                         \
-  namespace {                                                     \
-  unique_tag funcname(...);                                       \
-  }                                                               \
-  template <class T>                                              \
-  struct name {                                                   \
-    typedef typename EXTRACT_TYPE(sig) signature;                 \
-    typedef typename extract_argument<0, signature>::type arg0_t; \
-    typedef typename extract_argument<1, signature>::type arg1_t; \
-    typedef typename extract_return_type<signature>::type ret_t;  \
-                                                                  \
-    typedef __typeof__(funcname(maker<arg0_t>::make(),            \
-                                maker<arg1_t>::make())) sig_chk;  \
-                                                                  \
-    typedef typename not_c<AreSame<sig_chk, unique_tag> >::type type;          \
-  };                                                              \
-  }                                                               \
-  }                                                               \
+#define DEFINE_HAS_FUNC_2(funcname, sig, name)                        \
+  namespace has_func_internal {                                       \
+  namespace adl_barrier {                                             \
+  namespace {                                                         \
+  unique_tag funcname(...);                                           \
+  typedef __typeof__(funcname) funcname_t;                            \
+  }                                                                   \
+  template <class T>                                                  \
+  struct name {                                                       \
+    typedef typename EXTRACT_TYPE(sig) signature;                     \
+    typedef typename extract_argument<0, signature>::type arg0_t;     \
+    typedef typename extract_argument<1, signature>::type arg1_t;     \
+    typedef typename extract_return_type<signature>::type ret_t;      \
+                                                                      \
+    typedef __typeof__(funcname(maker<arg0_t>::make(),                \
+                                maker<arg1_t>::make())) sig_chk;      \
+                                                                      \
+    typedef typename not_c<AreSame<sig_chk, unique_tag> >::type type; \
+  };                                                                  \
+  }                                                                   \
+  }                                                                   \
   using has_func_internal::adl_barrier::name;
 
 #define DEFINE_HAS_TYPEDEF(typedef_, name)               \
