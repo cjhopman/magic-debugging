@@ -21,10 +21,10 @@ namespace magic {
 DEFINE_HAS_MEM_FUNC(OutputToStream, void(Base::*)(std::ostream*)const, HasOutputToStream);
 //DEFINE_HAS_MEM_FUNC(begin, has_begin);
 //DEFINE_HAS_MEM_FUNC(end, has_end);
-DEFINE_HAS_MEM_FUNC(ToString, std::string(Base::*)()const, HasToString);
+DEFINE_HAS_MEM_FUNC(ToString, (std::string(Base::*)()const), HasToString);
 DEFINE_HAS_MEM_FUNC(SerializeAsString, std::string(Base::*)()const, HasSerializeAsString);
 DEFINE_HAS_TYPEDEF(const_iterator, HasStreamableConstIterator);
-DEFINE_HAS_FUNC(PrintTo, (void(const T&, std::ostream*)), HasPrintTo);
+DEFINE_HAS_FUNC_2(PrintTo, (void(const T&, std::ostream*)), HasPrintTo);
 
 namespace internal {
   namespace adl_barrier {
@@ -66,6 +66,7 @@ struct streamable_type {
       HasToString<T>,
       HasStreamableConstIterator<T>,
       HasSerializeAsString<T>,
+      HasPrintTo<T>,
       Nil
     )
     all_streamable_types;
@@ -144,6 +145,12 @@ DEFINE_STREAM_TO_FOR(magic::is_streamable<T>, const T& t) {
 DEFINE_STREAM_TO_FOR(magic::not_c<magic::IsClass<T> >, const T& t) {
   std::stringstream ss;
   ss << t;
+  StreamTo(os, ss.str());
+}
+
+DEFINE_STREAM_TO_FOR(magic::HasPrintTo<T>, const T& t) {
+  std::stringstream ss;
+  PrintTo(t, &ss);
   StreamTo(os, ss.str());
 }
 

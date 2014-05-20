@@ -6,6 +6,10 @@
 
 namespace magic {
 
+namespace {
+struct unique_tag {};
+};
+
 template <bool T, typename U> struct enable_if {};
 template <typename U> struct enable_if<true, U> {
   typedef U type;
@@ -115,6 +119,11 @@ struct extract_argument {
   typedef typename TypeAt<typename FunctionType<F>::ArgsTypes, i>::type type;
 };
 
+template <typename F>
+struct extract_return_type {
+  typedef typename FunctionType<F>::ReturnType type;
+};
+
 struct any_conversion {
   template <class T>
   any_conversion(const T&);
@@ -132,12 +141,12 @@ struct any_conversion {
     template <typename U, U>                                         \
     struct type_check;                                               \
     template <typename _1>                                           \
-    static yes& chk(                                          \
+    static yes& chk(                                                 \
         type_check<typename func_sig<typename MemberFunctionType<    \
                        __typeof__(&_1::funcname)>::ClassType>::type, \
                    &_1::funcname>*);                                 \
     template <typename>                                              \
-    static no& chk(...);                                      \
+    static no& chk(...);                                             \
     typedef bool_<sizeof(chk<T>(0)) == sizeof(yes)> type;            \
   };
 
@@ -154,22 +163,26 @@ no_overload funcname(any_conversion, any_conversion);
 }
 }
 
-#define DEFINE_HAS_FUNC(funcname, sig, name)                                  \
-  namespace has_func_internal {                                               \
-  namespace adl_barrier {                                                     \
-  template <class T>                                                          \
-  struct name {                                                               \
-    typedef typename extract_argument<0, void(sig)>::type arg0_t;             \
-    typedef typename extract_argument<1, void(sig)>::type arg1_t;             \
-    enum B {                                                                  \
-      value = sizeof(is_overloaded_impl(                                      \
-                  funcname(maker<arg0_t>::make(), maker<arg1_t>::make()))) == \
-              sizeof(yes)                                                     \
-    };                                                                        \
-    typedef name type;                                                        \
-  };                                                                          \
-  }                                                                           \
-  }                                                                           \
+#define DEFINE_HAS_FUNC_2(funcname, sig, name)                    \
+  namespace has_func_internal {                                   \
+  namespace adl_barrier {                                         \
+  namespace {                                                     \
+  unique_tag funcname(...);                                       \
+  }                                                               \
+  template <class T>                                              \
+  struct name {                                                   \
+    typedef typename EXTRACT_TYPE(sig) signature;                 \
+    typedef typename extract_argument<0, signature>::type arg0_t; \
+    typedef typename extract_argument<1, signature>::type arg1_t; \
+    typedef typename extract_return_type<signature>::type ret_t;  \
+                                                                  \
+    typedef __typeof__(funcname(maker<arg0_t>::make(),            \
+                                maker<arg1_t>::make())) sig_chk;  \
+                                                                  \
+    typedef typename not_c<AreSame<sig_chk, unique_tag> >::type type;          \
+  };                                                              \
+  }                                                               \
+  }                                                               \
   using has_func_internal::adl_barrier::name;
 
 #define DEFINE_HAS_TYPEDEF(typedef_, name)               \

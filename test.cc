@@ -52,6 +52,7 @@ struct HasToStringAndOutputToStream {
 };
 
 struct HasPrintToC {
+  HasPrintToC(int j) : i(j) { }
   int i;
 };
 
@@ -82,14 +83,19 @@ int main() {
   DUMP_START << TFORMAT(1);
   using std::cout;
   using std::endl;
-  cout << all_c<bool_<true>, bool_<true> >::type::value << endl;
-  cout << all_c<bool_<false>, bool_<true> >::type::value << endl;
-  cout << all_c<bool_<true>, bool_<false> >::type::value << endl;
-  cout << all_c<bool_<false>, bool_<false> >::type::value << endl;
 
-  // cout << magic::HasPrintTo<HasPrintToC>::type::value << endl;
+  DUMP((all_c<bool_<true>, bool_<true> >::type::value));
+  DUMP((all_c<bool_<false>, bool_<true> >::type::value));
+  DUMP((all_c<bool_<true>, bool_<false> >::type::value));
+  DUMP((all_c<bool_<false>, bool_<false> >::type::value));
 
-  //MAGIC_STATIC_ASSERT((magic::AreSame<magic::bool_<1>, magic::HasPrintTo<HasPrintToC>::type>));
+  DUMP(magic::HasPrintTo<HasPrintToC>::type::value);
+
+  MAGIC_STATIC_ASSERT(magic::HasPrintTo<HasPrintToC>);
+  MAGIC_STATIC_ASSERT(not_c<magic::HasPrintTo<HasToString> >);
+
+  HasPrintToC hptc(17);
+  DUMP(hptc);
 
   HasSerializeAsString hsas(5);
   DUMP(hsas);
