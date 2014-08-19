@@ -15,6 +15,9 @@
       'target_defaults': {
         'variables': {
           'magic_disabled_targets': [
+            'pdfium',
+            'fxcodec',
+            'fpdfapi',
             'harfbuzz-ng',
             'magic_library',
             'magic_java',
@@ -25,7 +28,10 @@
           ],
         },
         'target_conditions': [
-          ['_toolset=="target" and not _target_name in magic_disabled_targets', {
+          [('_toolset=="target" '
+           'and not _target_name in magic_disabled_targets '
+           'and not "pdfium" in _target_name ')
+           , {
             'variables': {
               'input_jars_paths': ['<(PRODUCT_DIR)/lib.java/magic_java.jar'],
               'library_dexed_jars_paths': ['<(PRODUCT_DIR)/lib.java/magic_java.dex.jar'],
